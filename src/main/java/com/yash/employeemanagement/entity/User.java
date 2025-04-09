@@ -17,9 +17,12 @@ public class User {
     private Long id;
 
     @Column(nullable=false,unique=true) // specifies that this column cannot be null and must be unique
-    private String Username;
+    private String username;
 
     @Column(nullable = false)
-    private String Password;
+    private String password;
+
+    @Column(nullable = false)
+    public String role; //e.g, "ROLE_USER", "ROLE_ADMIN"
 
 }
