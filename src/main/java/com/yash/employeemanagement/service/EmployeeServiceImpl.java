@@ -4,6 +4,9 @@ import com.yash.employeemanagement.entity.Employee;
 import com.yash.employeemanagement.exception.ResourceNotFoundException;
 import com.yash.employeemanagement.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Cacheable(value = "employees")
     @Override
     public Page<Employee> getAllEmployees(Pageable pageable){
         Page<Employee> employees =  employeeRepository.findAll(pageable);
@@ -26,7 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         }
         return employees;
     }
-
+    @Cacheable(value="employee", key="#id")
     @Override
     public Employee getEmployeeById(Long id){
         return employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee id "+id+" not found"));
@@ -58,6 +62,8 @@ public class EmployeeServiceImpl implements EmployeeService{
         }
         return employees;
     }
+
+    @Cacheable(value = "employees", key = "#name + #department + #email")
     //write function for filtering all employees by name, department and email
     @Override
     public List<Employee> getEmployeesByCriteria(String name, String department, String email) {
@@ -74,6 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     }
 
+    @CachePut(value = "employee", key = "#id")
     @Override
     public Employee updateEmployee(Long id, Employee employee) {
         if(employeeRepository.existsById(id)){
@@ -86,12 +93,13 @@ public class EmployeeServiceImpl implements EmployeeService{
             throw new RuntimeException("Employee not found with id"+id);
         }
     }
-
+    @CachePut(value="employee", key="#employee.id")
     @Override
     public Employee saveEmployee(Employee employee){
         return employeeRepository.save(employee);
     }
 
+    @CacheEvict(value = "employee", key = "#id")
     @Override
     public void deleteEmployee(Long id){
         employeeRepository.deleteById(id);
