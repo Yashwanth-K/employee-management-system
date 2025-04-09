@@ -71,6 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                         (email == null || employee.getEmail().equalsIgnoreCase(email)))
                 .toList();
         //if all are null, it will return all employees else will check by all criteria
+
     }
 
     @Override
@@ -78,6 +79,8 @@ public class EmployeeServiceImpl implements EmployeeService{
         if(employeeRepository.existsById(id)){
             employee.setId(id);
             return employeeRepository.save(employee);
+            //The `save(employee)` method overwrites the old record in
+            // the database with new details, as the primary key (`id`) remains the same.
         }
         else {
             throw new RuntimeException("Employee not found with id"+id);

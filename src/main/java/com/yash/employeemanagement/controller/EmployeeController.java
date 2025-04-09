@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class EmployeeController {
         }
         return ResponseEntity.ok(new ApiResponse<>(true, "Employees retrieved successfully", employees));
     }
-
+    //any combination of name, department and email else return all employees
     @GetMapping("/filter/all")
     public ResponseEntity<ApiResponse<List<Employee>>> getEmployeesByCriteria(
             @RequestParam(required = false) String name,
@@ -82,10 +83,11 @@ public class EmployeeController {
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
         return ResponseEntity.ok(new ApiResponse<>(true, "Employee updated successfully", updatedEmployee));
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "Employee with ID " + id + " has been deleted", null));
     }
 }
+
