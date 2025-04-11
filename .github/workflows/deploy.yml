@@ -27,6 +27,9 @@ jobs:
         run: ./gradlew clean build
 #       till here
 
+      - name: Debug Docker Username
+        run: echo "Username is ${{ secrets.DOCKER_USERNAME }}"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3 #prepares docker build
 
