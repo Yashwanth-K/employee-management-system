@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -79,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         //if all are null, it will return all employees else will check by all criteria
 
     }
-
+    @CacheEvict(value = "employees", allEntries = true)
     @CachePut(value = "employee", key = "#id")
     @Override
     public Employee updateEmployee(Long id, Employee employee) {
@@ -93,13 +94,18 @@ public class EmployeeServiceImpl implements EmployeeService{
             throw new RuntimeException("Employee not found with id"+id);
         }
     }
+    @CacheEvict(value = "employees", allEntries = true)
     @CachePut(value="employee", key="#employee.id")
     @Override
     public Employee saveEmployee(Employee employee){
         return employeeRepository.save(employee);
     }
 
-    @CacheEvict(value = "employee", key = "#id")
+    //The @Caching annotation is used to group multiple caching annotations like @CacheEvict, @CachePut, etc.
+    @Caching(evict = {
+            @CacheEvict(value = "employees", allEntries = true),
+            @CacheEvict(value = "employee", key = "#id")
+    })
     @Override
     public void deleteEmployee(Long id){
         employeeRepository.deleteById(id);
