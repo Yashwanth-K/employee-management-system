@@ -26,3 +26,4 @@ public class User {
     public String role; //e.g, "ROLE_USER", "ROLE_ADMIN"
 
 }
+
