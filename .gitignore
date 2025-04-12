@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 rough.bash
 app.tar
+.ssh/ec2_deploy_key
+.ssh
 
 ### STS ###
 .apt_generated
