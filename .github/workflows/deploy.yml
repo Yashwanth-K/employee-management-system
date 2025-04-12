@@ -47,8 +47,8 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3 # allows secure file transfer and remote command execution on server vis SSH
         with: # Indicates the input parameters for the scp-action
           host: ${{ secrets.EC2_HOST }} #specify the EC2 instance IP address
-          username: ${{ secrets.EC2_USERNAME }} #specify the username to login to EC2
-          key: ${{ secrets.EC2_SSH_KEY }}
+          username: ${{ secrets.EC2_USER }} #specify the username to login to EC2
+          key: ${{ secrets.EC2_KEY }}
           script: |  #defines multi line script to be executed on EC2 after connecting vis SSH
             docker pull ${{ secrets.DOCKER_USERNAME }}/employee-management-app:latest 
             docker stop employee-management-app || true
