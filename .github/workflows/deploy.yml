@@ -44,7 +44,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/employee-management-app:latest
 
       - name: Deploy to EC2
-        uses: appleboy/scp-action@v0.1.0 # allows secure file transfer and remote command execution on server vis SSH
+        uses: appleboy/ssh-action@v1.0.3 # allows secure file transfer and remote command execution on server vis SSH
         with: # Indicates the input parameters for the scp-action
           host: ${{ secrets.EC2_HOST }} #specify the EC2 instance IP address
           username: ${{ secrets.EC2_USERNAME }} #specify the username to login to EC2
